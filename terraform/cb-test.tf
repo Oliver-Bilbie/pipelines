@@ -20,6 +20,7 @@ resource "aws_codebuild_project" "test" {
     type            = "GITHUB"
     location        = each.value.http_clone_url
     git_clone_depth = 1
+    buildspec       = "pipelines/buildspec.test.yaml"
   }
 
   source_version = "refs/pull/1/head"
@@ -39,12 +40,7 @@ resource "aws_codebuild_webhook" "pr-test" {
   filter_group {
     filter {
       type    = "EVENT"
-      pattern = "PULL_REQUEST_CREATED"
-    }
-
-    filter {
-      type    = "EVENT"
-      pattern = "PULL_REQUEST_UPDATED"
+      pattern = "PULL_REQUEST_CREATED,PULL_REQUEST_UPDATED"
     }
   }
 }

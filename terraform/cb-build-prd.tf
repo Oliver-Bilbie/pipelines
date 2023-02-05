@@ -30,6 +30,7 @@ resource "aws_codebuild_project" "build-prd" {
     type            = "GITHUB"
     location        = each.value.http_clone_url
     git_clone_depth = 1
+    buildspec       = "pipelines/buildspec.ci.yaml"
   }
 
   source_version = each.value.branch

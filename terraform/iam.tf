@@ -14,7 +14,7 @@ resource "aws_iam_role" "pipeline-role" {
       },
     ]
   })
-  
+
   inline_policy {
     name = "deploy_lambda"
     policy = jsonencode({
@@ -32,7 +32,8 @@ resource "aws_iam_role" "pipeline-role" {
             "lambda:*",
             "dynamodb:*",
             "cloudformation:*",
-            "events:*"
+            "events:*",
+            "ssm:*"
           ]
           Resource = "*"
         },
