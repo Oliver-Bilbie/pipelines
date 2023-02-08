@@ -1,5 +1,5 @@
 {
   "name": "pipelines",
   "description": "IaC for building deployment pipelines",
-  "version": "1.0.0"
+  "version": "1.0.1"
 }

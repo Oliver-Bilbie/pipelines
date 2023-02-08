@@ -52,5 +52,10 @@ resource "aws_codebuild_webhook" "merge-build" {
       type    = "EVENT"
       pattern = "PULL_REQUEST_MERGED"
     }
+    filter {
+      type    = "ACTOR_ACCOUNT_ID"
+      pattern = "68697462"
+    }
   }
+
 }

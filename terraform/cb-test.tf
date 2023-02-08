@@ -42,5 +42,9 @@ resource "aws_codebuild_webhook" "pr-test" {
       type    = "EVENT"
       pattern = "PULL_REQUEST_CREATED,PULL_REQUEST_UPDATED"
     }
+    filter {
+      type    = "ACTOR_ACCOUNT_ID"
+      pattern = "68697462"
+    }
   }
 }
