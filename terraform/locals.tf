@@ -4,6 +4,10 @@ locals {
   #     http_clone_url: The clone URL.
 
   repositories = {
+    homepage = {
+      branch         = "main"
+      http_clone_url = "https://github.com/Oliver-Bilbie/homepage.git"
+    }
     flight-guesser = {
       branch         = "main"
       http_clone_url = "https://github.com/Oliver-Bilbie/flight-guesser.git"
