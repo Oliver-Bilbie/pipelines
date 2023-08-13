@@ -1,17 +1,35 @@
-init:
+init-bootstrap:
 	@echo "[INFO] Initialiasing terraform"
-	@cd terraform && terraform init
+	@cd bootstrap && terraform init
 	@echo "[INFO] Validating terraform code"
-	@cd terraform && terraform validate
+	@cd bootstrap && terraform validate
 
-plan:
+plan-bootstrap:
 	@echo "[INFO] Running a terraform plan"
-	@cd terraform && terraform plan -parallelism=30 -refresh=true -out=plan.out
+	@cd bootstrap && terraform plan -var-file="../terraform.tfvars" -parallelism=30 -refresh=true -out=plan.out
 
-apply:
+apply-bootstrap:
 	@echo "[INFO] Deploying the infrastructure"
-	@cd terraform && terraform apply -auto-approve
+	@cd bootstrap && terraform apply -var-file="../terraform.tfvars" -auto-approve
 
-destroy:
+destroy-bootstrap:
 	@echo "[INFO] Destroying the infrastructure"
-	@cd terraform && terraform destroy -auto-approve
+	@cd bootstrap && terraform destroy -var-file="../terraform.tfvars" -auto-approve
+
+init-pipelines:
+	@echo "[INFO] Initialiasing terraform"
+	@cd pipelines && terraform init -reconfigure -backend-config="backend.conf"
+	@echo "[INFO] Validating terraform code"
+	@cd pipelines && terraform validate
+
+plan-pipelines:
+	@echo "[INFO] Running a terraform plan"
+	@cd pipelines && terraform plan -var-file="../terraform.tfvars" -parallelism=30 -refresh=true -out=plan.out
+
+apply-pipelines:
+	@echo "[INFO] Deploying the infrastructure"
+	@cd pipelines && terraform apply -var-file="../terraform.tfvars" -auto-approve
+
+destroy-pipelines:
+	@echo "[INFO] Destroying the infrastructure"
+	@cd pipelines && terraform destroy -var-file="../terraform.tfvars" -auto-approve

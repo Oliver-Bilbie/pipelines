@@ -5,11 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## 1.2.0
+
+-   Refactored to include a one-time bootstrap stage and a pipeline stage which will be run every time the pipelines need to be updated.
+-   The pipelines stage now uses an S3 bucket to hold the tfstate, and a dynamoDB lock table to prevent collisions.
+
 ## 1.1.0
 
 ### Added
 
--   Pipelines for homepage repo
+-   Pipelines for homepage repository
 
 ## 1.0.1
 
