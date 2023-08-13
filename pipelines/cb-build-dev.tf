@@ -1,7 +1,7 @@
 resource "aws_codebuild_project" "build-dev" {
-  for_each = { for k, v in local._repositories : k => v }
+  for_each = { for k, v in local.repositories : k => v }
 
-  name         = "${each.value.name}-build-dev"
+  name         = "${each.key}-build-dev"
   service_role = aws_iam_role.pipeline-role.arn
 
   cache {
@@ -44,7 +44,7 @@ resource "aws_codebuild_project" "build-dev" {
 resource "aws_codebuild_webhook" "pr-build" {
   for_each = { for k, v in aws_codebuild_project.build-dev : k => v }
 
-  project_name = each.value.name
+  project_name = aws_codebuild_project.build-dev[each.key].name
   build_type   = "BUILD"
 
   filter_group {
@@ -54,7 +54,7 @@ resource "aws_codebuild_webhook" "pr-build" {
     }
     filter {
       type    = "ACTOR_ACCOUNT_ID"
-      pattern = "68697462"
+      pattern = data.aws_ssm_parameter.github_id.value
     }
   }
 }

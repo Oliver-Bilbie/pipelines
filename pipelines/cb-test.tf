@@ -1,7 +1,7 @@
-resource "aws_codebuild_project" "build-prd" {
-  for_each = { for k, v in local._repositories : k => v }
+resource "aws_codebuild_project" "test" {
+  for_each = { for k, v in local.repositories : k => v }
 
-  name         = "${each.value.name}-build-prd"
+  name         = "${each.key}-test"
   service_role = aws_iam_role.pipeline-role.arn
 
   cache {
@@ -14,26 +14,16 @@ resource "aws_codebuild_project" "build-prd" {
     image                       = "aws/codebuild/amazonlinux2-x86_64-standard:4.0"
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
-
-    environment_variable {
-      name  = "BUILD_ENV"
-      value = "production"
-    }
-
-    environment_variable {
-      name  = "STAGE"
-      value = "prd"
-    }
   }
 
   source {
     type            = "GITHUB"
     location        = each.value.http_clone_url
     git_clone_depth = 1
-    buildspec       = "pipelines/buildspec.ci.yaml"
+    buildspec       = "pipelines/buildspec.test.yaml"
   }
 
-  source_version = each.value.branch
+  source_version = "refs/pull/1/head"
 
   artifacts {
     type = "NO_ARTIFACTS"
@@ -41,21 +31,20 @@ resource "aws_codebuild_project" "build-prd" {
 }
 
 
-resource "aws_codebuild_webhook" "merge-build" {
-  for_each = { for k, v in aws_codebuild_project.build-prd : k => v }
+resource "aws_codebuild_webhook" "pr-test" {
+  for_each = { for k, v in aws_codebuild_project.test : k => v }
 
-  project_name = each.value.name
+  project_name = aws_codebuild_project.test[each.key].name
   build_type   = "BUILD"
 
   filter_group {
     filter {
       type    = "EVENT"
-      pattern = "PULL_REQUEST_MERGED"
+      pattern = "PULL_REQUEST_CREATED,PULL_REQUEST_UPDATED"
     }
     filter {
       type    = "ACTOR_ACCOUNT_ID"
-      pattern = "68697462"
+      pattern = data.aws_ssm_parameter.github_id.value
     }
   }
-
 }
