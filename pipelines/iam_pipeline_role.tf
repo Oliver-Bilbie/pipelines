@@ -33,7 +33,8 @@ resource "aws_iam_role" "pipeline-role" {
             "dynamodb:*",
             "cloudformation:*",
             "events:*",
-            "ssm:*"
+            "ssm:*",
+            "kms:*"
           ]
           Resource = "*"
         },
